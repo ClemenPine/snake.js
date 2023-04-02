@@ -41,10 +41,23 @@ function spawnSnake() {
 }
 
 function spawnFood() {
-    food = {
-        x: Math.floor(Math.random() * (WIDTH / TILE)) * TILE,
-        y: Math.floor(Math.random() * (HEIGHT / TILE)) * TILE,
+    let foodX, foodY;
+    do {
+        foodX = Math.floor(Math.random() * (WIDTH / TILE)) * TILE;
+        foodY = Math.floor(Math.random() * (HEIGHT / TILE)) * TILE;
+    } while (isSnakeBody(foodX, foodY));
+
+    food = { x: foodX, y: foodY };
+}
+
+function isSnakeBody(x, y) {
+    for (let i = 1; i < snake.body.length; i++) {
+        if (snake.body[i].x === x && snake.body[i].y === y) {
+            return true;
+        }
     }
+
+    return false;
 }
 
 function handleKeyPress(e) {
@@ -107,12 +120,9 @@ function update() {
     } else {
         snake.body.pop()
     }
-
-    // Check for collision with self
-    for (let i = 1; i < snake.body.length; i++) {
-        if (head.x === snake.body[i].x && head.y === snake.body[i].y) {
-            endGame()
-        }
+    
+    if (isSnakeBody(head.x, head.y)) {
+        endGame()
     }
 
     // Add the head segment
