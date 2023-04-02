@@ -2,6 +2,7 @@ let ctx;
 let snake;
 let food;
 let score = 0;
+let interval_id;
 
 const TILE = 16
 const WIDTH = 400
@@ -20,7 +21,7 @@ window.onload = function () {
 
     document.addEventListener("keydown", handleKeyPress)
 
-    setInterval(gameLoop, INTERVAL)
+    interval_id = setInterval(gameLoop, INTERVAL)
 }
 
 function gameLoop() {
@@ -110,6 +111,7 @@ function update() {
     // Check for collision with walls
     if (head.x < 0 || head.x >= WIDTH || head.y < 0 || head.y >= HEIGHT) {
         endGame()
+        return
     }
 
     // Check for collision with food
@@ -120,9 +122,10 @@ function update() {
     } else {
         snake.body.pop()
     }
-    
+
     if (isSnakeBody(head.x, head.y)) {
         endGame()
+        return
     }
 
     // Add the head segment
@@ -144,10 +147,8 @@ function draw() {
 }
 
 function endGame() {
-    clearInterval(INTERVAL);
-    isGameRunning = false;
+    clearInterval(interval_id);
 
-    document.getElementById("game-container").classList.add("hidden")
     document.getElementById("end-screen").classList.remove("hidden")
     document.getElementById("final-score").textContent = score;
     

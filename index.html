@@ -7,7 +7,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <link href="output.css" rel="stylesheet"> -->
+
     <script src="snake.js"></script>
 </head>
 
@@ -16,13 +18,18 @@
         <div id="game-container" class="flex flex-col items-center justify-center">
             <h1 class="text-4xl font-bold mb-4 text-emerald-400">Snake Game</h1>
             <p id="score" class="text-2xl font-bold mb-4 text-slate-400">Score: 0</p>
+            
             <canvas id="canvas" class="mb-4 border-4 border-slate-200 rounded"></canvas>
+            
             <p class="text-sm text-slate-400">Use arrow keys to control the snake</p>
         </div>
 
-        <div id="end-screen" class="hidden fixed inset-0 flex flex-col items-center justify-center">
+        <div id="end-screen"
+            class="bg-slate-800 bg-opacity-50 backdrop-blur-sm hidden fixed inset-0 flex flex-col items-center justify-center">
+            
             <h2 class="text-3xl font-bold mb-4 text-slate-200">Game Over</h2>
             <p class="text-2xl text-slate-400 mb-4">Final Score: <span id="final-score"></span></p>
+            
             <button id="restart-btn"
                 class="px-4 py-2 bg-emerald-400 text-slate-800 font-bold rounded hover:bg-emerald-300 transition duration-200">Restart</button>
         </div>
