@@ -6,5 +6,8 @@ module.exports = {
     theme: {
         extend: {},
     },
+    safelist: [
+        'hidden'
+    ],
     plugins: [],
 }
