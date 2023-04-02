@@ -1,27 +1,32 @@
 let ctx;
 let snake;
 let food;
-let score = 0;
+let score;
 let interval_id;
 
-const TILE = 16
-const WIDTH = 400
-const HEIGHT = 400
-const INTERVAL = 80
+const TILE = 32
+const INTERVAL = 60
 
 window.onload = function () {
     const canvas = document.getElementById("canvas")
-    canvas.width = WIDTH
-    canvas.height = HEIGHT
-
+    canvas.width = Math.floor(window.innerWidth / TILE) * TILE
+    canvas.height = Math.floor(window.innerHeight / TILE) * TILE
+    
     ctx = canvas.getContext("2d")
+    
+    document.getElementById("restart-btn").addEventListener("click", init)
+    document.addEventListener("keydown", handleKeyPress)
+}
+
+function init() {
+    score = 0
 
     spawnSnake()
     spawnFood()
 
-    document.addEventListener("keydown", handleKeyPress)
-
     interval_id = setInterval(gameLoop, INTERVAL)
+
+    document.getElementById("title-screen").classList.add("hidden")
 }
 
 function gameLoop() {
@@ -44,8 +49,8 @@ function spawnSnake() {
 function spawnFood() {
     let foodX, foodY;
     do {
-        foodX = Math.floor(Math.random() * (WIDTH / TILE)) * TILE;
-        foodY = Math.floor(Math.random() * (HEIGHT / TILE)) * TILE;
+        foodX = Math.floor(Math.random() * (canvas.width / TILE)) * TILE;
+        foodY = Math.floor(Math.random() * (canvas.height / TILE)) * TILE;
     } while (isSnakeBody(foodX, foodY));
 
     food = { x: foodX, y: foodY };
@@ -90,7 +95,6 @@ function handleKeyPress(e) {
 }
 
 function update() {
-    // Move the snake
     const head = { x: snake.body[0].x, y: snake.body[0].y }
 
     switch (snake.direction) {
@@ -108,17 +112,12 @@ function update() {
             break
     }
 
-    // Check for collision with walls
-    if (head.x < 0 || head.x >= WIDTH || head.y < 0 || head.y >= HEIGHT) {
-        endGame()
-        return
-    }
+    head.x = (head.x + canvas.width) % canvas.width
+    head.y = (head.y + canvas.height) % canvas.height
 
-    // Check for collision with food
     if (head.x === food.x && head.y === food.y) {
-        score++
-        document.getElementById("score").innerHTML = "Score: " + score
         spawnFood()
+        score++
     } else {
         snake.body.pop()
     }
@@ -128,20 +127,18 @@ function update() {
         return
     }
 
-    // Add the head segment
     snake.body.splice(0, 0, head)
+    document.getElementById("score").innerHTML = score
 }
 
 function draw() {
-    ctx.clearRect(0, 0, WIDTH, HEIGHT)
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    // Draw snake
     ctx.fillStyle = "#10b981"
     for (let i = 0; i < snake.body.length; i++) {
         ctx.fillRect(snake.body[i].x, snake.body[i].y, TILE, TILE)
     }
 
-    // Draw food
     ctx.fillStyle = "#ef4444"
     ctx.fillRect(food.x, food.y, TILE, TILE)
 }
@@ -149,10 +146,7 @@ function draw() {
 function endGame() {
     clearInterval(interval_id);
 
-    document.getElementById("end-screen").classList.remove("hidden")
-    document.getElementById("final-score").textContent = score;
-    
-    document.getElementById("restart-btn").addEventListener("click", function () {
-        location.reload()
-    })
+    document.getElementById("title-screen").classList.remove("hidden")
+    document.getElementById("final-score").hidden = false
+    document.getElementById("final-score").innerHTML = `Score: ${score}`;
 }
