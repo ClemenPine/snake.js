@@ -146,7 +146,9 @@ function draw() {
 function endGame() {
     clearInterval(interval_id);
 
+    const percentage = (snake.body.length / (canvas.width * canvas.height) * 100).toFixed(3)
+
     document.getElementById("title-screen").classList.remove("hidden")
     document.getElementById("final-score").hidden = false
-    document.getElementById("final-score").innerHTML = `Score: ${score}`;
+    document.getElementById("final-score").innerHTML = `Score: ${score} (${percentage}%)`;
 }
